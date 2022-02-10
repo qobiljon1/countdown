@@ -8,70 +8,53 @@ export const Header = () => {
 
   const [minuts, setMinuts] = useState(25);
   const [seconds, setSeconds] = useState(0);
+  const [count, setCount] = useState(0);
   const styles = {
     color: colors,
     background: colors,
   };
 
+  const [time, setTime] = useState(minuts * 60);
+
   const changeColor = (value) => {
+    setBool(true);
     if (value === 1) {
       setColors("rgb(217, 85, 80)");
       setMinuts(25);
+      setTime(25 * 60);
       setSeconds(0);
     } else if (value === 2) {
       setColors("rgb(76, 145, 149)");
       setMinuts(5);
+      setTime(5 * 60);
       setSeconds(0);
     } else if (value === 3) {
       setColors("rgb(69, 124, 163)");
       setMinuts(15);
+      setTime(15 * 60);
       setSeconds(0);
     } else setColors("rgb(217, 85, 80)");
   };
 
-  // const countdownFunc = () => {
-  // setBool(!bool);
-  // let time = minuts * 60;
-  // let interval = setInterval(() => {
-  //   let min = Math.floor(time / 60);
-  //   let sec = time % 60;
-  //   setMinuts(min);
-  //   setSeconds(sec);
-  //   time--;
-  // }, 1000);
-  // };
+  const countdownFunc = () => {
+    setBool(!bool);
+  };
 
   useEffect(() => {
-    let intervalId = null;
-    let time = minuts * 60;
+    console.log(count);
     if (!bool) {
-      intervalId = setInterval(() => {
-        let min = Math.floor(time / 60);
-        let sec = time % 60;
-        setMinuts(min);
-        setSeconds(sec);
-        time--;
-      }, 1000);
-
-      console.log(intervalId);
-    } else {
-      clearInterval(intervalId);
-      setMinuts((min) => {
-        min = Math.floor(time / 60);
-        return min;
-      });
-      setSeconds((sec) => {
-        sec = time % 60;
-        return sec;
-      });
-      console.log(time);
+      setMinuts(Math.floor(time / 60));
+      setSeconds(time % 60);
+      setTime(time - 1);
     }
-    return () => {
-      if (minuts === 0 || bool ) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [bool]);
+
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+    
+    // eslint-disable-next-line
+  }, [count]);
+
   return (
     <div className="header" style={{ background: styles.background }}>
       <div className="container">
@@ -137,7 +120,7 @@ export const Header = () => {
                 <button
                   className={bool ? "start_button" : "stop_button"}
                   style={{ color: styles.color }}
-                  onClick={() => setBool(!bool)}
+                  onClick={countdownFunc}
                 >
                   {bool ? "START" : "STOP"}
                 </button>
