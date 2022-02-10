@@ -29,18 +29,49 @@ export const Header = () => {
     } else setColors("rgb(217, 85, 80)");
   };
 
-  const countdownFunc = () => {
-    setBool(!bool);
-    let time = minuts * 60;
-    let interval = setInterval(() => {
-      let min = Math.floor(time / 60);
-      let sec = time % 60;
-      setMinuts(min);
-      setSeconds(sec);
-      time--;
-    }, 1000);
-  };
+  // const countdownFunc = () => {
+  // setBool(!bool);
+  // let time = minuts * 60;
+  // let interval = setInterval(() => {
+  //   let min = Math.floor(time / 60);
+  //   let sec = time % 60;
+  //   setMinuts(min);
+  //   setSeconds(sec);
+  //   time--;
+  // }, 1000);
+  // };
 
+  useEffect(() => {
+    let intervalId = null;
+    let time = minuts * 60;
+    if (!bool) {
+      intervalId = setInterval(() => {
+        let min = Math.floor(time / 60);
+        let sec = time % 60;
+        setMinuts(min);
+        setSeconds(sec);
+        time--;
+      }, 1000);
+
+      console.log(intervalId);
+    } else {
+      clearInterval(intervalId);
+      setMinuts((min) => {
+        min = Math.floor(time / 60);
+        return min;
+      });
+      setSeconds((sec) => {
+        sec = time % 60;
+        return sec;
+      });
+      console.log(time);
+    }
+    return () => {
+      if (minuts === 0 || bool ) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [bool]);
   return (
     <div className="header" style={{ background: styles.background }}>
       <div className="container">
@@ -106,7 +137,7 @@ export const Header = () => {
                 <button
                   className={bool ? "start_button" : "stop_button"}
                   style={{ color: styles.color }}
-                  onClick={countdownFunc}
+                  onClick={() => setBool(!bool)}
                 >
                   {bool ? "START" : "STOP"}
                 </button>
